@@ -71,8 +71,6 @@ export default {
                     </div>
 
                     <button type="submit" class="btn btn-secondary"><i class="fa-solid fa-plus"></i></button>
-                    <router-link to="/Success"><button @click="createRandomAssociations" class="btn btn-secondary">Secret
-                            Santa</button></router-link>
                 </form>
             </div>
 
@@ -96,15 +94,10 @@ export default {
 
 
         </div>
-        <!-- <div v-if="secretSanta.length > 0" class="mt-3">
-            <h4>Associazioni Secret Santa:</h4>
-            <ul>
-                <li v-for="(santa, index) in secretSanta" :key="index">
-                    Il Regalo sarà inviato da:{{ santa.sender.name }} {{ santa.sender.surname }} -
-                    E ricevuto da: {{ santa.received.name }} {{ santa.received.surname }}
-                </li>
-            </ul>
-        </div> -->
+        <div class="mt-5 text-center">
+            <router-link to="/Success"><button @click="createRandomAssociations" class="btn btn-secondary">Secret
+                    Santa</button></router-link>
+        </div>
     </div>
 
 
