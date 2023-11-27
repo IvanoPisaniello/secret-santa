@@ -46,11 +46,11 @@ export default {
 
 <template>
     <div class="snow"></div>
-    <div class="container mt-5 top">
-        <div class="row">
+    <div class="container ms-5 mt-5 top">
+        <div class="row mt-5">
             <!-- Colonna sinistra con il form -->
-            <div class="col-md-6">
-                <form @submit.prevent="addTo" class="text-white">
+            <div class="col-md-4">
+                <form @submit.prevent="addTo" class="white-text">
                     <h1>Inserisci un Nuovo Partecipante!</h1>
                     <div class="mb-3">
                         <label for="name" class="form-label">Nome:</label>
@@ -75,8 +75,8 @@ export default {
             </div>
 
 
-            <div class="col-md-6">
-                <div class="card">
+            <div class="col-md-8 d-flex justify-content-end">
+                <div class="card border-0">
                     <div class="card-body">
                         <h1>Lista Partecipanti</h1>
                         <ul>
@@ -114,11 +114,11 @@ li {
 
 .card {
     background: transparent;
-    color: white;
+    color: grey;
 }
 
 .white-text {
-    color: white;
+    color: grey;
     background: transparent;
 }
 
@@ -148,7 +148,7 @@ $grad: (
 // The CSS
 html {
     height: 100%;
-    background: linear-gradient(#123 30%, #667);
+    background-image: url('207.jpg');
     overflow: hidden;
 }
 
