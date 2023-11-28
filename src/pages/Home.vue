@@ -231,6 +231,7 @@ body {
     background-size: $w + px $w + px;
     animation: snow $s linear infinite;
     content: "";
+    z-index: -200;
 }
 
 .snow:after {
