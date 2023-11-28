@@ -95,7 +95,7 @@ export default {
                             id="email" required>
                     </div>
 
-                    <button type="submit" class="btn btn-secondary"><i class="fa-solid fa-plus"></i></button>
+                    <button type="submit" class="btn btn-danger mt-3"><i class="fa-solid fa-plus"></i></button>
                 </form>
             </div>
             <div class="col-4 d-flex flex-column align-items-center">

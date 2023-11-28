@@ -27,7 +27,7 @@ export default {
         </ul>
         <h1 class="text-danger text-center">Il Secret Santa è ufficialmente iniziato!</h1>
         <h2 class="text-danger text-center">Buon Divertimento!</h2>
-
+        <img src="../../public/slitta.png" alt="">
     </div>
 </template>
 
@@ -39,5 +39,19 @@ export default {
     color: white; // Cambia il colore del testo in base al tuo
     height: 800px;
     padding-top: 100px;
+}
+
+@keyframes scroll {
+    from {
+        transform: translateX(100%); // Inizia dalla destra della pagina
+    }
+
+    to {
+        transform: translateX(-100%); // Sposta verso sinistra della pagina
+    }
+}
+
+img {
+    animation: scroll 10s linear infinite; // Puoi regolare la velocità modificando il valore "10s"
 }
 </style>
