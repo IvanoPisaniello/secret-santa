@@ -11,6 +11,13 @@ export default {
             store,
             items: store.items,
             participants: store.participants,
+            capodanno: new Date('January 1, 2024 00:00:00').getTime(),
+            countdown: {
+                days: 0,
+                hours: 0,
+                minutes: 0,
+                seconds: 0,
+            },
         }
     },
 
@@ -23,15 +30,34 @@ export default {
         getRandomInt,
         createRandomAssociations,
         updateLocalStorage,
+        updateCountdown() {
+            const now = new Date().getTime();
+            const difference = this.capodanno - now;
 
+            this.countdown.days = Math.floor(difference / (1000 * 60 * 60 * 24));
+            this.countdown.hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            this.countdown.minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+            this.countdown.seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+            if (difference < 0) {
+                clearInterval(this.countdownInterval);
+                this.formattedCountdown = 'Buon Anno!';
+            }
+        },
 
 
 
 
     },
-    created() {
-
+    mounted() {
+        this.updateCountdown();
+        this.countdownInterval = setInterval(this.updateCountdown, 1000);
     },
+    computed: {
+        formattedCountdown() {
+            return `${this.countdown.days}d ${this.countdown.hours}h ${this.countdown.minutes}m ${this.countdown.seconds}s`;
+        },
+    }
 
 
 }
@@ -45,11 +71,10 @@ export default {
 </script>
 
 <template>
-    <div class="snow"></div>
-    <div class="container ms-5 mt-5 top">
-        <div class="row mt-5">
+    <div class="container mt-5 top">
+        <div class="row mt-5 top-row">
             <!-- Colonna sinistra con il form -->
-            <div class="col-md-4">
+            <div class="col-6">
                 <form @submit.prevent="addTo" class="white-text">
                     <h1>Inserisci un Nuovo Partecipante!</h1>
                     <div class="mb-3">
@@ -75,10 +100,12 @@ export default {
             </div>
 
 
-            <div class="col-md-8 d-flex justify-content-end">
-                <div class="card border-0">
+            <div class="col-6 d-flex flex-column align-items-end">
+                <h1>Lista Partecipanti</h1>
+                <div class="card">
+
                     <div class="card-body">
-                        <h1>Lista Partecipanti</h1>
+
                         <ul>
                             <li v-for="(item, index) in items" :key="index" class="mt-4">
                                 {{ item.name }} {{ item.surname }} - {{ item.email }}
@@ -90,43 +117,82 @@ export default {
                 </div>
             </div>
 
-
-
-
+            <div class="snow"></div>
         </div>
-        <div class="mt-5 text-center">
-            <router-link to="/Success"><button @click="createRandomAssociations" class="btn btn-secondary">Secret
-                    Santa</button></router-link>
+        <div class="row">
+            <div class="col-12">
+            </div>
+            <div class="mt-5 text-center">
+                <router-link to="/Success"><button @click="createRandomAssociations" class="btn btn-secondary">Secret
+                        Santa</button></router-link>
+            </div>
+
+
+            <div>
+                <h1>Countdown a Capodanno</h1>
+                <div id="countdown">{{ formattedCountdown }}</div>
+            </div>
         </div>
-    </div>
-
-
-    <div class="container">
-
 
     </div>
 </template>
 
 <style lang="scss">
+.container {
+    width: 100%;
+}
+
+body {
+    text-align: center;
+    background-color: #f4f4f4;
+
+}
+
+#countdown {
+    font-size: 5rem;
+    margin-top: 50px;
+}
+
+
 li {
     list-style-type: none;
+}
+
+h1 {
+    color: grey;
 }
 
 .card {
     background: transparent;
     color: grey;
+    max-height: 400px;
+    width: 500px;
+
+
+    overflow: auto;
+
+    border: 1px solid #ccc;
+    padding: 10px;
+    border: 10px grey solid;
+    border-radius: 30px;
 }
 
 .white-text {
     color: grey;
     background: transparent;
+
+}
+
+.card::-webkit-scrollbar {
+    width: 0px;
+    /* Larghezza della scrollbar */
 }
 
 
 
 .top {
-    position: fixed;
-    z-index: 999;
+    // position: fixed;
+    // z-index: 999;
 }
 
 $d: 70; // density
@@ -145,10 +211,11 @@ $grad: (
             rgba(0, 0, 0, 0)) !global;
 }
 
-// The CSS
-html {
+
+body {
     height: 100%;
     background-image: url('207.jpg');
+    background-size: auto;
     overflow: hidden;
 }
 

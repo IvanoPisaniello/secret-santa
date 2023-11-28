@@ -20,6 +20,7 @@ export default {
     position: fixed;
     width: 100%;
     z-index: 999;
+    top: 0;
     background-color: (rgba(31, 23, 23, 0.325));
     color: white; // Cambia il colore del testo in base al tuo design
 }
