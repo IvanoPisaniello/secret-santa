@@ -19,12 +19,12 @@ export default {
 <template>
     <div class="page-background">
         <h4 class="text-secondary">Associazioni Secret Santa:</h4>
-        <ul>
-            <li v-for="(santa, index) in secretSanta" :key="index" class="text-secondary">
-                Il Regalo sarà inviato da:{{ santa.sender.name }} {{ santa.sender.surname }} -
-                E ricevuto da: {{ santa.received.name }} {{ santa.received.surname }}
-            </li>
-        </ul>
+
+        <p v-for="(santa, index) in secretSanta" :key="index" class="text-secondary">
+            Il Regalo sarà inviato da:{{ santa.sender.name }} {{ santa.sender.surname }} -
+            E ricevuto da: {{ santa.received.name }} {{ santa.received.surname }}
+        </p>
+
         <h1 class="text-danger text-center">Il Secret Santa è ufficialmente iniziato!</h1>
         <h2 class="text-danger text-center">Buon Divertimento!</h2>
         <img src="../../public/slitta.png" alt="">
@@ -52,6 +52,6 @@ export default {
 }
 
 img {
-    animation: scroll 10s linear infinite; // Puoi regolare la velocità modificando il valore "10s"
+    animation: scroll 10s linear infinite;
 }
 </style>
