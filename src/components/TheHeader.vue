@@ -9,8 +9,12 @@ export default {
     <header class="navbar navbar-expand-lg top">
         <div class="container">
 
-            <a class="navbar-brand text-white" href="#">Secret Santa</a>
-            <router-link class="text-white" to="/">Home</router-link>
+            <a class="navbar-brand text-danger" href="#">
+                <h1>Secret Santa</h1>
+            </a>
+            <router-link class="text-danger" to="/">
+                <h1>Home</h1>
+            </router-link>
         </div>
     </header>
 </template>
@@ -21,7 +25,13 @@ export default {
     width: 100%;
     z-index: 999;
     top: 0;
-    background-color: (rgba(31, 23, 23, 0.325));
-    color: white; // Cambia il colore del testo in base al tuo design
+    background-color: (rgba(225, 221, 221, 0.325));
+    color: red;
+    font-family: 'Mountains of Christmas', serif;
+
+}
+
+.navbar {
+    height: 60px;
 }
 </style>

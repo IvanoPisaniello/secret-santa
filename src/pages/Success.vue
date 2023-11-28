@@ -25,15 +25,15 @@ export default {
                 E ricevuto da: {{ santa.received.name }} {{ santa.received.surname }}
             </li>
         </ul>
-        <h1 class="text-secondary text-center">Il Secret Santa è ufficialmente iniziato!</h1>
-        <h2 class="text-secondary text-center">Buon Divertimento!</h2>
+        <h1 class="text-danger text-center">Il Secret Santa è ufficialmente iniziato!</h1>
+        <h2 class="text-danger text-center">Buon Divertimento!</h2>
 
     </div>
 </template>
 
 <style lang="scss" scoped>
 .page-background {
-    background-image: url('207.jpg'); // Assicurati di specificare il percorso corretto
+    // Assicurati di specificare il percorso corretto
     background-size: cover;
     background-position: center;
     color: white; // Cambia il colore del testo in base al tuo
