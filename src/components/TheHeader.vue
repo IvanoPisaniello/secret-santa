@@ -25,7 +25,7 @@ export default {
     width: 100%;
     z-index: 999;
     top: 0;
-    background-color: (rgba(225, 221, 221, 0.325));
+    background-color: (rgba(10, 7, 7, 0.415));
     color: red;
     font-family: 'Mountains of Christmas', serif;
 
