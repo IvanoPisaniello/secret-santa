@@ -47,7 +47,7 @@ export default {
     }
 
     to {
-        transform: translateX(-100%); // Sposta verso sinistra della pagina
+        transform: translateX(-140%); // Sposta verso sinistra della pagina
     }
 }
 
