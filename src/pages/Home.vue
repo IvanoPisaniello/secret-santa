@@ -71,10 +71,12 @@ export default {
 </script>
 
 <template>
-    <div class="container mt-5 top">
-        <div class="row mt-5 top-row">
+    <div class="container mt-2 top">
+
+        <div class="row  top-row">
             <!-- Colonna sinistra con il form -->
             <div class="col-4 mt-5">
+                <img src="../../public/slitta.png" alt="">
                 <form @submit.prevent="addTo" class="white-text">
                     <h1>Inserisci un Nuovo Partecipante!</h1>
                     <div class="">
@@ -167,6 +169,22 @@ export default {
 </template>
 
 <style lang="scss">
+@keyframes scroll {
+    from {
+        transform: translateX(1200px); // Inizia dalla destra della pagina
+    }
+
+    to {
+        transform: translateX(-900px); // Sposta verso sinistra della pagina
+    }
+}
+
+img {
+    animation: scroll 20s linear infinite;
+    height: 20px;
+}
+
+
 .btn-santa {
     margin-top: 50px;
 }
