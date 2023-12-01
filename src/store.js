@@ -1,5 +1,5 @@
 import { reactive } from "vue";
-
+import axios from "axios";
 export const store = reactive({
     participants: {
         name: '',
@@ -75,6 +75,19 @@ function createRandomAssociations() {
 
         store.secretSanta.push(newSecretSanta);
     }
+
+    axios.post('http://127.0.0.1:8010/sendMail', store.secretSanta,)
+        .then((response) => {
+            console.log('i dati inviati sono: ', response);
+        })
+        .catch((error) => {
+            if (!error.response) {
+                // network error
+                this.errorStatus = 'Error: errore di rete diocane';
+            } else {
+                this.errorStatus = error.response.data.message;
+            }
+        });
 }
 
 export {

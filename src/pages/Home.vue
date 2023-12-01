@@ -1,5 +1,5 @@
 <script>
-
+import axios from "axios";
 import { store, addTo, removeItem, getRandomInt, createRandomAssociations, updateLocalStorage } from '../store.js';
 export default {
     components: {
