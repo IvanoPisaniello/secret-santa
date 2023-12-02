@@ -75,10 +75,11 @@ function createRandomAssociations() {
 
         store.secretSanta.push(newSecretSanta);
     }
-
-    axios.post('http://127.0.0.1:8010/sendMail', store.secretSanta,)
+    console.log("dati che sto inviando sono questi", store.secretSanta)
+    axios.post('http://127.0.0.1:8010/sendMail', { secretSanta: store.secretSanta },)
         .then((response) => {
             console.log('i dati inviati sono: ', response);
+
         })
         .catch((error) => {
             if (!error.response) {
@@ -88,6 +89,8 @@ function createRandomAssociations() {
                 this.errorStatus = error.response.data.message;
             }
         });
+
+
 }
 
 export {
