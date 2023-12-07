@@ -1,15 +1,15 @@
 <script>
 
-import { store, createRandomAssociations } from '../store.js';
+
 export default {
     data() {
         return {
-            secretSanta: store.secretSanta,
+
         }
     },
 
     methods: {
-        createRandomAssociations,
+
     },
     mounted() {
 
@@ -22,25 +22,37 @@ export default {
 
 <template>
     <div class="page-background">
-        <h4 class="text-secondary">Associazioni Secret Santa:</h4>
 
-        <p v-for="(santa, index) in secretSanta" :key="index" class="text-secondary">
-            Il Regalo sarà inviato da:{{ santa.sender.name }} {{ santa.sender.surname }} -
-            E ricevuto da: {{ santa.received.name }} {{ santa.received.surname }}
-        </p>
 
-        <h1 class="text-danger text-center">Il Secret Santa è ufficialmente iniziato!</h1>
-        <h2 class="text-danger text-center">Buon Divertimento!</h2>
-        <img src="../../public/slitta.png" alt="">
-    </div>
-    <div id="mySpinner" class="spinner-border visibility" role="status">
-        <span class="sr-only">Loading...</span>
+        <h1 class="text-danger text-center"> <strong>IL SECRET SANTA E' UFFICIALMENTE INIZIATO!</strong></h1>
+
+        <h2 class="text-danger text-center"> <strong>BUON DIVERTIMENTO!</strong></h2>
+        <img src="../../public/slitta.png" alt="" class="slitta-success">
     </div>
 </template>
 
 <style lang="scss" scoped>
-.visibility {
-    visibility: visible;
+.slitta-success {
+    height: 150px;
+}
+
+@keyframes illuminate {
+
+    0%,
+    100% {
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.553);
+    }
+
+    50% {
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.553);
+    }
+}
+
+h1,
+h2 {
+    font-family: 'Mountains of Christmas', serif;
+    color: gold;
+    animation: illuminate 2s ease-in-out infinite;
 }
 
 
