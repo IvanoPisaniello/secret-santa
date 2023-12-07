@@ -1,16 +1,20 @@
+  
 <script>
 import axios from "axios";
-import { store, addTo, removeItem, getRandomInt, createRandomAssociations, updateLocalStorage } from '../store.js';
-export default {
-    components: {
 
-    },
+export default {
     data() {
         return {
-
-            store,
-            items: store.items,
-            participants: store.participants,
+            isLoading: false,
+            participants: {
+                name: '',
+                surname: '',
+                email: '',
+            },
+            items: JSON.parse(localStorage.getItem('participants')) || [],
+            secretSanta: [],
+            makeGift: [],
+            receivedGift: [],
             capodanno: new Date('January 1, 2024 00:00:00').getTime(),
             countdown: {
                 days: 0,
@@ -23,13 +27,80 @@ export default {
 
     methods: {
         addTo() {
-            addTo(this.participants);  // passo i partecipanti come argomento altrimenti non funziona
-            this.participants = { name: '', surname: '', email: '' };
+            if (
+                this.participants.name.trim() !== '' &&
+                this.participants.surname.trim() !== '' &&
+                this.participants.email.trim() !== ''
+            ) {
+                this.items.push({ ...this.participants });
+                this.participants = { name: '', surname: '', email: '' };
+                this.updateLocalStorage();
+            }
         },
-        removeItem,
-        getRandomInt,
-        createRandomAssociations,
-        updateLocalStorage,
+        removeItem(index) {
+            this.items.splice(index, 1);
+            this.updateLocalStorage();
+        },
+        getRandomInt(max) {
+            return Math.floor(Math.random() * max);
+        },
+        createRandomAssociations() {
+            this.isLoading = true;
+            while (this.secretSanta.length < this.items.length) {
+                let gifterIsFound = false;
+                let randomNumberForGifter = null;
+
+                while (!gifterIsFound) {
+                    randomNumberForGifter = this.getRandomInt(this.items.length);
+
+                    if (!this.makeGift.includes(this.items[randomNumberForGifter])) {
+                        console.log("Chi farà il regalo: " + this.items[randomNumberForGifter].name);
+                        this.makeGift.push(this.items[randomNumberForGifter]);
+                        gifterIsFound = true;
+                    }
+                }
+
+                gifterIsFound = false;
+                let randomNumberForGifted = null;
+
+                while (!gifterIsFound) {
+                    randomNumberForGifted = this.getRandomInt(this.items.length);
+
+                    if (
+                        !this.receivedGift.includes(this.items[randomNumberForGifted]) &&
+                        randomNumberForGifted !== randomNumberForGifter
+                    ) {
+                        console.log("Chi riceverà il regalo: " + this.items[randomNumberForGifted].name);
+                        this.receivedGift.push(this.items[randomNumberForGifted]);
+                        gifterIsFound = true;
+                    }
+                }
+
+                let newSecretSanta = {
+                    sender: this.items[randomNumberForGifter],
+                    received: this.items[randomNumberForGifted],
+                };
+
+                this.secretSanta.push(newSecretSanta);
+            }
+            console.log("dati che sto inviando sono questi", this.secretSanta);
+            axios.post('http://127.0.0.1:8010/sendMail', { secretSanta: this.secretSanta })
+                .then((response) => {
+                    console.log('i dati inviati sono: ', response);
+                    this.isLoading = false;
+                    this.$router.push('/Success');
+                })
+                .catch((error) => {
+                    if (!error.response) {
+                        this.errorStatus = 'Error: errore di rete diocane';
+                    } else {
+                        this.errorStatus = error.response.data.message;
+                    }
+                });
+        },
+        updateLocalStorage() {
+            localStorage.setItem('participants', JSON.stringify(this.items));
+        },
         updateCountdown() {
             const now = new Date().getTime();
             const difference = this.capodanno - now;
@@ -44,31 +115,23 @@ export default {
                 this.formattedCountdown = 'Buon Anno!';
             }
         },
-
-
-
-
     },
+
     mounted() {
         this.updateCountdown();
         this.countdownInterval = setInterval(this.updateCountdown, 1000);
     },
+
     computed: {
         formattedCountdown() {
             return `${this.countdown.days}d ${this.countdown.hours}h ${this.countdown.minutes}m ${this.countdown.seconds}s`;
         },
     }
-
-
 }
-
-
-
-
-
-
-
 </script>
+  
+  
+  
 
 <template>
     <div class="container mt-2 top">
@@ -155,8 +218,11 @@ export default {
         <div class="col-12">
         </div>
         <div class="text-center btn-santa">
-            <router-link to="/Success"><button @click="createRandomAssociations" class="btn btn-danger">Secret
-                    Santa</button></router-link>
+            <!-- <router-link to="/Success"></router-link> -->
+
+
+            <button @click="createRandomAssociations" class="btn btn-danger">Secret
+                Santa</button>
         </div>
 
 
@@ -164,11 +230,66 @@ export default {
 
 
 
+        <!-- <div v-if="isLoading" class="overlay"></div>
 
+
+        <div v-if="isLoading" id="mySpinner" class="spinner-border" role="status">
+            <span class="sr-only">Loading...</span>
+        </div> -->
+
+        <div v-if="isLoading" class="overlay"></div>
+
+        <div v-if="isLoading" class="container">
+            <svg id="envelope" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 500">
+
+                <path class="st0"
+                    d="M440 350H200c-2.8 0-5-2.2-5-5V155c0-2.8 2.2-5 5-5h240c2.8 0 5 2.2 5 5v190c0 2.8-2.2 5-5 5z"
+                    id="envelope-back" />
+                <path id="letter-bottom" class="st1" d="M198 156h243v189H198z" />
+                <path id="letter-top" class="st1" d="M198 156h243v189H198z" />
+                <path id="letter-top-2" class="st1" d="M198 156h243v189H198z" />
+                <path class="st2"
+                    d="M332.2 244.7c2-11.9 109-93.7 109-93.7 2.1 0 3.8 1.5 3.8 3.3v191.9c0 1.8-1.7 3.3-3.8 3.3 0 0-108.2-79.4-109-94.2-.1-2.1-.3-8.6 0-10.6z"
+                    id="envelope-right" />
+                <path class="st2"
+                    d="M307.8 255.8c-2 11.9-109 93.7-109 93.7-2.1 0-3.8-1.5-3.8-3.3V154.3c0-1.8 1.7-3.3 3.8-3.3 0 0 108.2 79.4 109 94.2.1 2.1.3 8.6 0 10.6z"
+                    id="envelope-left" />
+                <path class="st0"
+                    d="M327 249.3c15 1.7 118 97.3 118 97.3 0 1.9-1.9 3.4-4.2 3.4H199.2c-2.3 0-4.2-1.5-4.2-3.4 0 0 100-96.6 118.6-97.3 2.7-.2 10.9-.3 13.4 0z"
+                    id="envelope-bottom" />
+                <path
+                    d="M319.4 295c-3.1 0-7.6-.6-11.1-4.1C274 257 195 154.3 195 154.3c0-2.4 1.9-4.3 4.2-4.3h241.6c2.3 0 4.2 1.9 4.2 4.3 0 0-82 103.6-115.5 136.6-3.1 3-7.1 4.1-10.1 4.1z"
+                    fill="gray" id="envelope-top-shadow" />
+                <path class="st1"
+                    d="M319.4 291c-3.1 0-7.6-.5-11.1-4C274 254 195 154.2 195 154.2c0-2.3 1.9-4.2 4.2-4.2h241.6c2.3 0 4.2 1.9 4.2 4.2 0 0-82 100.8-115.5 132.8-3.1 2.9-7.1 4-10.1 4z"
+                    id="envelope-top" />
+            </svg>
+        </div>
     </div>
 </template>
 
 <style lang="scss">
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+
+    z-index: 998;
+
+}
+
+#mySpinner {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    // transform: translate(-50%, -50%);
+    z-index: 10000;
+    /* Assicurati che lo spinner sia sopra l'overlay */
+}
+
 @keyframes scroll {
     from {
         transform: translateX(1200px); // Inizia dalla destra della pagina
@@ -725,6 +846,311 @@ ul li {
         height: 60px;
         width: 30px;
     }
+}
+
+
+//loader
+
+
+// VARIABLES
+
+$envelope-color: red;
+
+
+
+
+
+
+
+svg {
+    display: block;
+    width: 400px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    margin: auto;
+    z-index: 999;
+}
+
+svg {
+    animation: 2s envelope-enter, 2s envelope-pulse 2.75s infinite;
+}
+
+
+#letter-top {
+    animation: 1.75s letter-top ease-out;
+    animation-fill-mode: both;
+    transform-origin: 50% 32%;
+}
+
+#letter-top-2 {
+    animation: 1.75s letter-top-2 ease-out;
+    animation-fill-mode: both;
+    transform-origin: 50% 32%;
+}
+
+#letter-bottom {
+    animation: 2s letter-bottom;
+    animation-delay: 1s;
+    animation-fill-mode: both;
+}
+
+#envelope-back {
+    animation: 1s envelope-back;
+    animation-delay: 1.5s;
+    animation-fill-mode: both;
+}
+
+#envelope-top {
+    animation: 1.25s envelope-top ease-in-out;
+    animation-delay: 2s;
+    animation-fill-mode: both;
+    transform-origin: 50% 30%;
+}
+
+#envelope-top-shadow {
+    animation: 1.25s envelope-top-shadow;
+    animation-delay: 2s;
+    animation-fill-mode: both;
+    transform-origin: 50% 30%;
+}
+
+#envelope-right {
+    animation: 1.25s envelope-right ease-in-out;
+    animation-delay: 2s;
+    animation-fill-mode: both;
+    transform-origin: 69.5% 50%;
+}
+
+#envelope-left {
+    animation: 1.25s envelope-left ease-in-out;
+    animation-delay: 1.6s;
+    animation-fill-mode: both;
+    transform-origin: 30.5% 50%;
+}
+
+#envelope-bottom {
+    animation: 1.25s envelope-bottom ease-in-out;
+    animation-delay: 2s;
+    animation-fill-mode: both;
+    transform-origin: 50% 70%;
+}
+
+@keyframes letter-top {
+    0% {
+        transform: scaleY(-1) skewX(0deg);
+        fill: #e6e6e6;
+    }
+
+    50% {
+        transform: scaleY(0) skewX(-10deg);
+        fill: darken(#e6e6e6, 20%);
+    }
+
+    60% {
+        fill: lighten(#e6e6e6, 5%);
+    }
+
+    100% {
+        transform: scaleY(1) skewX(0deg);
+        fill: #e6e6e6;
+    }
+}
+
+@keyframes letter-top-2 {
+    0% {
+        transform: scaleY(-1) skewX(0deg);
+        fill: #e6e6e6;
+    }
+
+    50% {
+        transform: scaleY(0) skewX(10deg);
+        fill: darken(#e6e6e6, 20%);
+    }
+
+    60% {
+        fill: lighten(#e6e6e6, 5%);
+    }
+
+    100% {
+        transform: scaleY(1) skewX(0deg);
+        fill: #e6e6e6;
+    }
+}
+
+@keyframes letter-bottom {
+    from {
+        fill: #e6e6e6;
+    }
+
+    to {
+        fill: darken(#e6e6e6, 10%);
+    }
+}
+
+@keyframes envelope-back {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes envelope-enter {
+    0% {
+        opacity: 0;
+        transform: scale(0);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.1);
+    }
+
+    75% {
+        // transform: scale(.95);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes envelope-pulse {
+    0% {
+        transform: scale(1);
+    }
+
+    25% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(.95);
+    }
+
+    100% {
+        transform: scale(1);
+    }
+}
+
+
+
+@keyframes envelope-top {
+    0% {
+        transform: scaleY(0);
+        fill: lighten($envelope-color, 20%);
+    }
+
+    50% {
+        transform: scaleY(-1);
+        fill: lighten($envelope-color, 10%);
+    }
+
+    60% {
+        fill: darken($envelope-color, 20%);
+    }
+
+    100% {
+        transform: scaleY(1);
+        fill: lighten($envelope-color, 10%);
+    }
+}
+
+@keyframes envelope-top-shadow {
+    0% {
+        opacity: 0;
+    }
+
+    65% {
+        opacity: 0;
+        transform: scaleY(1.5);
+    }
+
+    100% {
+        opacity: .25;
+        transform: scaleY(1);
+    }
+}
+
+@keyframes envelope-right {
+    0% {
+        transform: scaleX(0);
+        fill: lighten(#ccc, 20%);
+    }
+
+    50% {
+        transform: scaleX(-1);
+        fill: #ccc;
+    }
+
+    60% {
+        fill: darken(#ccc, 20%);
+    }
+
+    100% {
+        transform: scaleX(1);
+        fill: #ccc;
+    }
+}
+
+@keyframes envelope-left {
+    0% {
+        transform: scaleX(0);
+        fill: lighten(#ccc, 20%);
+    }
+
+    50% {
+        transform: scaleX(-1);
+        fill: #ccc;
+    }
+
+    60% {
+        fill: darken(#ccc, 20%);
+    }
+
+    100% {
+        transform: scaleX(1);
+        fill: #ccc;
+    }
+}
+
+@keyframes envelope-bottom {
+    0% {
+        transform: scaleY(0);
+        fill: darken(#b3b3b3, 20%);
+    }
+
+    50% {
+        transform: scaleY(-1);
+        fill: #b3b3b3;
+    }
+
+    60% {
+        fill: lighten(#b3b3b3, 20%);
+    }
+
+    100% {
+        transform: scaleY(1);
+        fill: #b3b3b3;
+    }
+
+}
+
+.st0 {
+    fill: #b3b3b3
+}
+
+.st1 {
+    fill: #e6e6e6
+}
+
+.st2 {
+    fill: #ccc
 }
 </style>
 
