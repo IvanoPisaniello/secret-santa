@@ -1,5 +1,6 @@
 import { reactive } from "vue";
 import axios from "axios";
+
 export const store = reactive({
     participants: {
         name: '',
@@ -38,6 +39,18 @@ function getRandomInt(max) {
 }
 
 function createRandomAssociations() {
+    const spinner = document.getElementsByClassName('spinner-border');
+    if (spinner) {
+
+        console.log(spinner)
+
+    } else {
+        console.error('elemento non trovato')
+    }
+
+
+
+
     while (store.secretSanta.length < store.items.length) {
         let gifterIsFound = false;
         let randomNumberForGifter = null;
@@ -76,19 +89,20 @@ function createRandomAssociations() {
         store.secretSanta.push(newSecretSanta);
     }
     console.log("dati che sto inviando sono questi", store.secretSanta)
-    axios.post('http://127.0.0.1:8010/sendMail', { secretSanta: store.secretSanta },)
-        .then((response) => {
-            console.log('i dati inviati sono: ', response);
+    // axios.post('http://127.0.0.1:8010/sendMail', { secretSanta: store.secretSanta },)
+    //     .then((response) => {
+    //         console.log('i dati inviati sono: ', response);
+    //         // spinner.classList.remove('spinner-border');
 
-        })
-        .catch((error) => {
-            if (!error.response) {
-                // network error
-                this.errorStatus = 'Error: errore di rete diocane';
-            } else {
-                this.errorStatus = error.response.data.message;
-            }
-        });
+    //     })
+    //     .catch((error) => {
+    //         if (!error.response) {
+    //             // network error
+    //             this.errorStatus = 'Error: errore di rete diocane';
+    //         } else {
+    //             this.errorStatus = error.response.data.message;
+    //         }
+    //     });
 
 
 }

@@ -1,6 +1,6 @@
 <script>
 
-import { store } from '../store.js';
+import { store, createRandomAssociations } from '../store.js';
 export default {
     data() {
         return {
@@ -9,8 +9,11 @@ export default {
     },
 
     methods: {
-
+        createRandomAssociations,
     },
+    mounted() {
+
+    }
 
 }
 
@@ -30,9 +33,18 @@ export default {
         <h2 class="text-danger text-center">Buon Divertimento!</h2>
         <img src="../../public/slitta.png" alt="">
     </div>
+    <div id="mySpinner" class="spinner-border visibility" role="status">
+        <span class="sr-only">Loading...</span>
+    </div>
 </template>
 
 <style lang="scss" scoped>
+.visibility {
+    visibility: visible;
+}
+
+
+
 .page-background {
     // Assicurati di specificare il percorso corretto
     background-size: cover;
