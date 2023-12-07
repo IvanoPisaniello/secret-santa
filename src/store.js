@@ -39,7 +39,7 @@ function getRandomInt(max) {
 }
 
 function createRandomAssociations() {
-    const spinner = document.getElementsByClassName('spinner-border');
+    const spinner = document.getElementById('mySpinner');
     if (spinner) {
 
         console.log(spinner)
@@ -89,20 +89,20 @@ function createRandomAssociations() {
         store.secretSanta.push(newSecretSanta);
     }
     console.log("dati che sto inviando sono questi", store.secretSanta)
-    // axios.post('http://127.0.0.1:8010/sendMail', { secretSanta: store.secretSanta },)
-    //     .then((response) => {
-    //         console.log('i dati inviati sono: ', response);
-    //         // spinner.classList.remove('spinner-border');
+    axios.post('http://127.0.0.1:8010/sendMail', { secretSanta: store.secretSanta },)
+        .then((response) => {
+            console.log('i dati inviati sono: ', response);
+            // spinner.classList.remove('spinner-border');
 
-    //     })
-    //     .catch((error) => {
-    //         if (!error.response) {
-    //             // network error
-    //             this.errorStatus = 'Error: errore di rete diocane';
-    //         } else {
-    //             this.errorStatus = error.response.data.message;
-    //         }
-    //     });
+        })
+        .catch((error) => {
+            if (!error.response) {
+                // network error
+                this.errorStatus = 'Error: errore di rete diocane';
+            } else {
+                this.errorStatus = error.response.data.message;
+            }
+        });
 
 
 }
